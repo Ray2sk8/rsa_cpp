@@ -1,0 +1,13 @@
+TARGET = h a
+CC = g++
+INCLUDE = -I./include
+CFLAGS = -g -Wall -O2 $(INCDIR)
+
+.cpp:
+	$(CC) $(CFLAGS) -o $@ $<
+
+#.PHONY : clean
+
+clean:
+	rm -rf *.a *.o *~ $(TARGET)
+    echo "clean"

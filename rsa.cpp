@@ -32,7 +32,7 @@ bool isRelativelyPrime(ull a, ull b) {
 }
 
 /**
- * @brief 二条以上
+ * @brief 二乗以上
  *
  * @param m message
  * @param e べき乗
@@ -40,9 +40,7 @@ bool isRelativelyPrime(ull a, ull b) {
  * @return ull
  */
 ull sendEncrypt(ull m, ull e, ull n) {
-    // ull send = pow(x, e);
-    // send = send%n;
-    ull send = m % n;
+    ull send = m % n;// m (mod n)
     // cout << send << endl;
 
     for (ull i = 1; i < e; i++) {
@@ -55,14 +53,14 @@ ull sendEncrypt(ull m, ull e, ull n) {
 }
 
 /**
- * @brief 二条以下
+ * @brief 二乗以上
  *
  * @param m message
  * @param e べき乗 秘密鍵
  * @param n 素数の積
  */
 ull rcvDecrypt(ull m, ull d, ull n) {
-    ull recv = m % n;
+    ull recv = m % n;// m (mod n)
 
     for (ull i = 1; i < d; i++) {
         recv = recv * m;
@@ -76,25 +74,29 @@ ull rcvDecrypt(ull m, ull d, ull n) {
 int main() {
 
     ull p, q;
+    ull n = p * q; // 公開鍵
+    ull e;         // (p - 1) * (q - 1) と互いに素なe  公開鍵
+    ull d;         // 秘密鍵
+
     do {
         cout << "please input prime p and q: ";
         cin >> p >> q;
     } while (ULLONG_MAX < p * q);
     // cout << "please input prime p and q: ";
+    n = p * q; // 公開鍵
 
     ull x; // message
-    cout << "please input  message: ";
-    cin >> x;
+    do {
+        cout << "please input  message: ";
+        cin >> x;
+    } while (x > n);
 
-    ull n = p * q; // 公開鍵
-    ull e;         // (p - 1) * (q - 1) と互いに素なe  公開鍵
-    ull d;         // 秘密鍵
-
-    cout << "ULLONG_MAX:    " << ULLONG_MAX << endl;
+    //cout << "ULLONG_MAX:    " << ULLONG_MAX << endl;
     cout << "n:             " << n << endl;
     // define e
-    for (ull i = 2; i < (p - 1) * (q - 1); i++) { // iと(p-1)*)(q-1)は互いに素か
-        if (isRelativelyPrime(i, (p - 1) * (q - 1))) {
+        ull p_q = (p - 1) * (q - 1);
+    for (ull i = 2; i < p_q; i++) { // iと(p-1)*)(q-1)は互いに素か
+        if (isRelativelyPrime(i, p_q ) ) {
             e = i;
             break;
         }
@@ -102,10 +104,9 @@ int main() {
 
     cout << "e:" << e << endl;
 
-    ull p_q = (p - 1) * (q - 1);
     // define d
     for (ull i = 1; i <= p_q; i++) {
-        if ( (e*i) % p_q == 1) {
+        if ((e * i) % p_q == 1) {
             d = i;
             break;
         }
